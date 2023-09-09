@@ -20,6 +20,10 @@ class DFA :
         
         return q in self.F
     
+# DFA_0
+# accepts symbols containing 'ab'
+# (0) -b-> 1 -a-> (2)
+#  a       b      a,b
 D0 = DFA(
     {0, 1, 2},
     {"a", "b"},
@@ -32,5 +36,22 @@ D0 = DFA(
         (2, "b"):2,
     },
     0,
-    {0, 1}
+    {0, 2}
+)
+
+# DFA_1
+# accepts symbols with even/odd number of 'a's and 'b's
+# (0) -a,b-> 1
+#     <-a,b-
+D1 = DFA(
+    {0, 1},
+    {"a", "b"},
+    {
+        (0, "a"):1,
+        (0, "b"):1,
+        (1, "a"):0,
+        (1, "b"):0,
+    },
+    0,
+    {0}
 )
