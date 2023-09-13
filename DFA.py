@@ -1,57 +1,54 @@
-class DFA :
-    # Q: set of states
-    # Sigma: set of symbols
-    # delta: transition function
-    # q0: initial state
-    # F: set of final states
-    def __init__(self, Q, Sigma, delta, q0, F) :
-        self.Q = Q
-        self.Sigma = Sigma
-        self.delta = delta
-        self.q0 = q0
-        self.F = F
+class DFA:
+    def __init__(self, states, alphabet, transition, initial_state, final_states):
+        self.states = states
+        self.alphabet = alphabet
+        self.transition = transition
+        self.initial_state = initial_state
+        self.final_states = final_states
 
-    def run (self, symbols) :
-        q = self.q0 # starting state
+    def is_valid_input(self, input_string):
+        for symbol in input_string:
+            if symbol not in self.alphabet:
+                return False
+        return True
 
-        while symbols != "" :
-            q = self.delta[(q, symbols[0])] # transition
-            symbols = symbols[1:] # next symbol
+    def process_input(self, input_string):
+        if not self.is_valid_input(input_string):
+            return False
         
-        return q in self.F
-    
-# DFA_0
-# accepts symbols containing 'ab'
-# (0) -b-> 1 -a-> (2)
-#  a       b      a,b
-D0 = DFA(
-    {0, 1, 2},
-    {"a", "b"},
-    {
-        (0, "a"):0,
-        (0, "b"):1,
-        (1, "a"):2,
-        (1, "b"):1,
-        (2, "a"):2,
-        (2, "b"):2,
-    },
-    0,
-    {0, 2}
-)
+        current_state = self.initial_state
+        for symbol in input_string:
+            if current_state not in self.states:
+                return False  # Invalid state
+            current_state = self.transition.get((current_state, symbol), None)
+            if current_state is None:
+                return False  # No transition defined
 
-# DFA_1
-# accepts symbols with even/odd number of 'a's and 'b's
-# (0) -a,b-> 1
-#     <-a,b-
-D1 = DFA(
-    {0, 1},
-    {"a", "b"},
-    {
-        (0, "a"):1,
-        (0, "b"):1,
-        (1, "a"):0,
-        (1, "b"):0,
-    },
-    0,
-    {0}
-)
+        return current_state in self.final_states
+
+# Example usage:
+if __name__ == "__main__":
+    # Define the DFA
+    states = {'q0', 'q1', 'q2'}
+    alphabet = {'0', '1'}
+    transition = {
+        ('q0', '0'): 'q0',
+        ('q0', '1'): 'q1',
+        ('q1', '0'): 'q2',
+        ('q1', '1'): 'q0',
+        ('q2', '0'): 'q1',
+        ('q2', '1'): 'q2',
+    }
+    initial_state = 'q0'
+    final_states = {'q0'}
+
+    dfa = DFA(states, alphabet, transition, initial_state, final_states)
+
+    # Test the DFA with input strings
+    input_strings = ['010101', '0110', '1001', '101010']
+    for input_string in input_strings:
+        result = dfa.process_input(input_string)
+        if result:
+            print(f"'{input_string}' is accepted.")
+        else:
+            print(f"'{input_string}' is rejected.")
