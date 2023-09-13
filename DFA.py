@@ -45,7 +45,7 @@ if __name__ == "__main__":
     dfa = DFA(states, alphabet, transition, initial_state, final_states)
 
     # Test the DFA with input strings
-    input_strings = ['010101', '0110', '1001', '101010']
+    input_strings = ['010101', '0110', '1001', '101010', '', '1']
     for input_string in input_strings:
         result = dfa.process_input(input_string)
         if result:
